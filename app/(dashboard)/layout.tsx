@@ -1,6 +1,4 @@
-import Link from "next/link";
 import Navbar from "./_components/Navbar";
-import Sidebar from "./_components/Sidebar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (

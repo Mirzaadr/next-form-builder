@@ -1,5 +1,6 @@
 "use client"
 
+import DesignerSidebar from "./DesignerSidebar";
 import { useDroppable } from "@dnd-kit/core";
 
 const Designer = () => {
@@ -18,6 +19,7 @@ const Designer = () => {
           </p>
         </div>
       </div>
+      <DesignerSidebar />
     </div>
   )
 }
