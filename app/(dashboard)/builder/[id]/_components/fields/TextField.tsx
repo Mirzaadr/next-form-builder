@@ -5,13 +5,14 @@ import {
   ElementsType,
   FormElement,
   FormElementInstance,
+  SubmitFunction,
 } from "../FormElements";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import {
   Form,
@@ -84,23 +85,34 @@ function DesignerComponent({
 
 function FormComponent({
   elementInstance,
+  submitValue,
 }: {
   elementInstance: FormElementInstance;
+  submitValue?: SubmitFunction;
 }) {
   const element = elementInstance as CustomInstance;
   const { label, required, placeholder, helperText } = element.extraAttributes;
+  const [value, setValue] = useState("");
+
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label>
         {label}
         {required && "*"}
       </Label>
-      <Input placeholder={placeholder} />
+      <Input
+        placeholder={placeholder}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={(e) => {
+          submitValue?.(element.id, e.target.value);
+        }}
+        value={value}
+      />
       {helperText && (
         <p className="text-muted-foreground text-[0.8rem]">{helperText}</p>
       )}
     </div>
-  )
+  );
 }
 
 function PropertiesComponent({
@@ -182,9 +194,7 @@ function PropertiesComponent({
                   }}
                 />
               </FormControl>
-              <FormDescription>
-                The Placeholder of the field.
-              </FormDescription>
+              <FormDescription>The Placeholder of the field.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -204,7 +214,8 @@ function PropertiesComponent({
                 />
               </FormControl>
               <FormDescription>
-                The helper text of the field. <br/> It will be displayed below the field.
+                The helper text of the field. <br /> It will be displayed below
+                the field.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -218,11 +229,15 @@ function PropertiesComponent({
               <div className="space-y-0.5">
                 <FormLabel>Required</FormLabel>
                 <FormDescription>
-                  The helper text of the field. <br/> It will be displayed below the field.
+                  The helper text of the field. <br /> It will be displayed
+                  below the field.
                 </FormDescription>
               </div>
               <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange}/>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

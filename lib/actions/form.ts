@@ -136,3 +136,19 @@ export const publishForm = async (id: number) => {
     }
   })
 }
+
+export const getFormContentByUrl = async (formUrl: string) => {
+  return await db.form.update({
+    select: {
+      content: true,
+    },
+    data: {
+      visits: {
+        increment: 1,
+      }
+    },
+    where: {
+      shareURL: formUrl,
+    }
+  });
+};
