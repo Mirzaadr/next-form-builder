@@ -3,14 +3,14 @@
 import { cn, idGenerator } from "@/lib/utils";
 import DesignerSidebar from "./DesignerSidebar";
 import { DragEndEvent, useDndMonitor, useDraggable, useDroppable } from "@dnd-kit/core";
-import { useState } from "react";
+import { act, useState } from "react";
 import { ElementsType, FormElementInstance, FormElements } from "./FormElements";
 import useDesigner from "./hooks/useDesigner";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 
 const Designer = () => {
-  const { elements, addElement, selectedElement, setSelectedElement } = useDesigner();
+  const { elements, addElement, selectedElement, setSelectedElement, removeElement } = useDesigner();
   const droppable = useDroppable({
     id: "designer-drop-area",
     data: {
@@ -24,17 +24,76 @@ const Designer = () => {
       if(!active || !over) return;
 
       const isDesignerBtnElement = active?.data?.current?.isDesignerBtnElement;
+      const isDroppingOverDesignerDropArea = over.data?.current?.isDesignerDropArea;
 
-      if (isDesignerBtnElement) {
-        const type = active.data.current?.type;
+      // First Scenario: dropping a sidebar btn element over the designer drop area
+      if (isDesignerBtnElement && isDroppingOverDesignerDropArea) {
+        const type = active.data?.current?.type;
         const newElement = FormElements[type as ElementsType].construct(
           idGenerator(),
         );
 
-        addElement(0, newElement);
+        addElement(elements.length, newElement);
+        return;
+      }
+      
+      // Second scenario: dropping a sidebar btn element over the designer element
+      const isDroppingOverDesignerElementTopHalf = over?.data?.current?.isTopHalfDesignerElement;
+      const isDroppingOverDesignerElementBottomHalf = over?.data?.current?.isBottomHalfDesignerElement;
+      
+      const isDroppingOverDesignerElement = isDroppingOverDesignerElementTopHalf | isDroppingOverDesignerElementBottomHalf;
+      
+      const droppingSidebarBtnOverDesignerElement = isDesignerBtnElement && isDroppingOverDesignerElement;
+      if (droppingSidebarBtnOverDesignerElement) {
+        const type = active.data?.current?.type;
+        const newElement = FormElements[type as ElementsType].construct(
+          idGenerator(),
+        );
+
+        const overId = over?.data?.current?.elementId;
+
+        const overElementIndex = elements.findIndex((el) => el.id === overId);
+        if (overElementIndex === -1) {
+          throw new Error("element not found");
+        }
+
+        let indexForNewElement = overElementIndex // i assume i'm on top half;
+        if (isDroppingOverDesignerElementBottomHalf) {
+          indexForNewElement = overElementIndex + 1;
+        }
+        addElement(indexForNewElement, newElement);
+        return;
+
+      }
+
+      // Third Scenario: dragging a designer element over another designer element
+      const isDraggingDesignerElement = active.data?.current?.isDesignerElement;
+      const draggingDesignerElementOverAnotherDesignerElement = isDroppingOverDesignerElement && isDraggingDesignerElement;
+
+      if (draggingDesignerElementOverAnotherDesignerElement) {
+        const activeId = active.data?.current?.elementId;
+        const activeElementIndex = elements.findIndex((el) => el.id === activeId);
+
+        const overId = over?.data?.current?.elementId;
+        const overElementIndex = elements.findIndex((el) => el.id === overId);
+
+        if (activeElementIndex === -1 || overElementIndex === -1) {
+          throw new Error("element not found");
+        }
+        
+        const activeElement = { ...elements[activeElementIndex] };
+        removeElement(activeId);
+
+        let indexForNewElement = overElementIndex // i assume i'm on top half;
+        if (isDroppingOverDesignerElementBottomHalf) {
+          indexForNewElement = overElementIndex + 1;
+        }
+        addElement(indexForNewElement, activeElement);
+        return;
       }
     }
-  })
+  });
+
   return (
     <div className="flex w-full h-full">
       <div className="p-4 w-full" onClick={() => {
@@ -127,7 +186,10 @@ const DesignerElementWrapper = ({ element }: { element: FormElementInstance }) =
       {mouseIsOver && (
         <>
         <div className="absolute right-0 h-full">
-          <Button className="flex justify-center h-full rounded-md rounded-l-none bg-red-500" variant={"outline"} onClick={() => removeElement(element.id)}>
+          <Button className="flex justify-center h-full rounded-md rounded-l-none bg-red-500" variant={"outline"} onClick={(e) => {
+              e.stopPropagation(); 
+              removeElement(element.id);
+            }}>
             <Trash2 className="size-6"/>
           </Button>
         </div>
