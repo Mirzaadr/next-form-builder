@@ -157,14 +157,10 @@ const FormCard = ({ form }: { form: Form }) => {
           {
             form.published && (
             <span className="flex items-center gap-2">
-              <View className="text-muted-foreground"/>
+              <View className="text-muted-foreground size-4"/>
               <span>{form.visits.toLocaleString()}</span>
-              <BookText className="text-muted-foreground"/>
+              <BookText className="text-muted-foreground size-4"/>
               <span>{form.submissions.toLocaleString()}</span>
-              <MousePointerClick className="text-muted-foreground"/>
-              <span>{form.visits.toLocaleString()}</span>
-              <MousePointerSquareDashed className="text-muted-foreground"/>
-              <span>{form.visits.toLocaleString()}</span>
             </span>
             )
           }
