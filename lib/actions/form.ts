@@ -152,3 +152,22 @@ export const getFormContentByUrl = async (formUrl: string) => {
     }
   });
 };
+
+export const submitFormByUrl = async (formUrl: string, content: string) => {
+  return await db.form.update({
+    data: {
+      submissions: {
+        increment: 1,
+      },
+      FormSubmissions: {
+        create: {
+          content
+        }
+      }
+    },
+    where: {
+      shareURL: formUrl,
+      published: true,
+    }
+  });
+};
