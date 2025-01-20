@@ -122,3 +122,17 @@ export const updateFormContent = async (id: number, jsonContent: string) => {
     }
   })
 }
+
+export const publishForm = async (id: number) => {
+  const user = await currentUser();
+  if(!user) {
+    throw new UserNotFoundErr();
+  }
+
+  return await db.form.update({
+    where: { id },
+    data: {
+      published: true,
+    }
+  })
+}
