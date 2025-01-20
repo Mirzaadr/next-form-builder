@@ -100,7 +100,7 @@ export const getFormById = async (id: number) => {
   if (!user) {
     throw new UserNotFoundErr();
   }
-
+  
   return await db.form.findUnique({
     where: {
       userId: user.id,
@@ -108,3 +108,17 @@ export const getFormById = async (id: number) => {
     },
   });
 };
+
+export const updateFormContent = async (id: number, jsonContent: string) => {
+  const user = await currentUser();
+  if(!user) {
+    throw new UserNotFoundErr();
+  }
+
+  return await db.form.update({
+    where: { id },
+    data: {
+      content: jsonContent,
+    }
+  })
+}
