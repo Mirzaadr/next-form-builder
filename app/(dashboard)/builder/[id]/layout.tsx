@@ -1,10 +1,13 @@
 import { ReactNode } from "react";
+import DesignerContextProvider from "./_components/contexts/DesignerContext";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className='flex w-full flex-grow mx-auto'>
-      {children}
-    </div>
+    <DesignerContextProvider>
+      <div className='flex w-full flex-grow mx-auto'>
+        {children}
+      </div>
+    </DesignerContextProvider>
   )
 }
 

@@ -7,15 +7,19 @@ export type FormElement = {
   type: ElementsType;
 
   designerBtnElement: {
-    icon: React.ReactElement | LucideIcon;
+    icon: React.ElementType | LucideIcon;
     label: string;
   };
 
   construct: (id: string)  => FormElementInstance;
 
-  designerComponent: React.FC;
+  designerComponent: React.FC<{
+    elementInstance: FormElementInstance,
+  }>;
   formComponent: React.FC;
-  propertiesComponent: React.FC;
+  propertiesComponent: React.FC<{
+    elementInstance: FormElementInstance,
+  }>;
 };
 
 export type FormElementInstance = {
