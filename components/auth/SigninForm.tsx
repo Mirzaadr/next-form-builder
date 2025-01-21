@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useTransition } from 'react'
+import React, { useTransition } from 'react'
 import CardWrapper from '@/components/auth/CardWrapper';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,9 +19,8 @@ import { login } from '@/lib/actions/signin';
 import { redirect, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { signIn } from 'next-auth/react';
 import { DEFAULT_LOGIN_REDIRECT } from '@/lib/settings';
-// import { signIn } from '@/lib/auth';
+import Spinner from '@/components/common/Spinner';
 
 
 type LoginFormProps = {
@@ -60,6 +59,13 @@ const LoginForm = (props: LoginFormProps) => {
     <CardWrapper
       label="Welcome back"
       showSocial={false}
+      footer={(
+        <Button variant="link" className='font-normal w-full' size={"sm"} asChild>
+          <Link href={"/auth/signup"}>
+            {"Don't have an account?"}
+          </Link>
+        </Button>
+      )}
     >
       <Form {...form}>
         <form 
@@ -100,26 +106,14 @@ const LoginForm = (props: LoginFormProps) => {
                         disabled={isPending}
                       />
                     </FormControl>
-                    <Button
-                      size="sm"
-                      variant="link"
-                      asChild
-                      className='px-0 font-normal'
-                    >
-                      <Link href="/auth/reset">
-                        Forgot Password?
-                      </Link>
-                    </Button>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </>
           </div>
-          {/* <FormError message={error || urlError}/> */}
-          {/* <FormSuccess message={success}/> */}
-          <Button type='submit' className='w-full'>
-            Login
+          <Button type='submit' className='w-full' disabled={isPending}>
+            {isPending ? <Spinner size="sm"/> : "Login"}
           </Button>
         </form>
       </Form>

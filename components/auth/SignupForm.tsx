@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useTransition } from 'react'
+import React, { useTransition } from 'react'
 import CardWrapper from './CardWrapper';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,6 +17,8 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { register } from '@/lib/actions/signup';
 import { toast } from 'sonner';
+import Link from 'next/link';
+import Spinner from '@/components/common/Spinner';
 
 
 type SignupFormProps = {
@@ -25,8 +27,6 @@ type SignupFormProps = {
 
 const SignupForm = (props: SignupFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const [success, setSuccess] = useState<string | undefined>("");
-  const [error, setError] = useState<string | undefined>("");
   const form = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
@@ -51,6 +51,13 @@ const SignupForm = (props: SignupFormProps) => {
     <CardWrapper
       label="Create an account"
       showSocial={false}
+      footer={
+        <Button variant="link" className='font-normal w-full' size={"sm"} asChild>
+          <Link href={"/auth/signin"}>
+            {"Already have an account?"}
+          </Link>
+        </Button>
+      }
     >
       <Form {...form}>
         <form 
@@ -119,7 +126,7 @@ const SignupForm = (props: SignupFormProps) => {
             />
           </div>
           <Button type='submit' className='w-full' disabled={isPending}>
-            Register
+            {isPending ? <Spinner size="sm"/> : "Register"}
           </Button>
         </form>
       </Form>

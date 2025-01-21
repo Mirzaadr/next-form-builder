@@ -22,7 +22,7 @@ const CardWrapper = ({
   showSocial,
 }: CardWrapperProps) => {
   return (
-    <Card  className='w-[400px] shadow-md'>
+    <Card className='w-[400px] shadow-md enforced authForm'>
       <CardHeader>
         <CardTitle className='hidden'/>
         <div className='w-full flex flex-col gap-y-4 items-center justify-center'>
