@@ -45,12 +45,6 @@ const LoginForm = (props: LoginFormProps) => {
 
   const onSubmit = (values: z.infer<typeof SigninSchema>) => {
     startTransition(() => {
-      // signIn("credentials", {
-      //   email: values.email,
-      //   password: values.password,
-      //   redirectTo: callbackUrl || "/dashboard",
-      //   redirect: true,
-      // });
       login(values, callbackUrl).then((res) => {
         if (!res.success) {
           toast.error(res.message);

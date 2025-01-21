@@ -4,7 +4,7 @@
  * @type {string[]}
  * wil redirect logged in users to
  */
-export const publicRoutes = ["/", "/auth/new-verification"];
+export const publicRoutes = ["/auth/new-verification"];
 
 /**
  * An array of routes that are used for authentication
@@ -30,4 +30,4 @@ export const apiAuthPrefix = "/api/auth";
  * The default route after redirect
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
+export const DEFAULT_LOGIN_REDIRECT = "/";
