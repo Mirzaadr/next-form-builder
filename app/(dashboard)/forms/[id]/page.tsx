@@ -184,7 +184,7 @@ const RowCell = ({ type, value }: { type: ElementsType; value: string; }) => {
       break;
     case "CheckboxField":
       const checked = value === "true";
-      node = <Checkbox checked={checked} disabled />
+      node = <Checkbox checked={checked} disabled className="pointer-events-none p-0 m-0" />;
       break;
     default:
       break;
