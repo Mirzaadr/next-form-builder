@@ -26,7 +26,7 @@ interface FormBuilderProps {
 }
 
 const FormBuilder = ({ form }: FormBuilderProps) => {
-  const { setElements } = useDesigner();
+  const { setElements, setSelectedElement } = useDesigner();
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       distance: 10, // 10px
@@ -43,7 +43,8 @@ const FormBuilder = ({ form }: FormBuilderProps) => {
   useEffect(() => {
     const elements = JSON.parse(form.content);
     setElements(elements || []);
-  }, [form, setElements]);
+    setSelectedElement(null);
+  }, [form, setElements, setSelectedElement]);
 
   if (form.published) {
     const shareUrl = `${window.location.origin}/submit/${form.shareURL}`;
