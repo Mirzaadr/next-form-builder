@@ -24,7 +24,7 @@ const AuthButton = ({
   signInHref="/auth/signin"
 }: AuthButtonProps) => {
   const onClick = () => {
-    redirect(signInHref || "/")
+    redirect(signInHref || "/auth/signin")
   }
 
   if (mode === "modal") {

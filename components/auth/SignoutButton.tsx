@@ -13,7 +13,7 @@ const SignoutButton = ({
   const onClick = () => {
     // console.log("signout")
     signOut({
-      redirectTo: "/"
+      redirectTo: "/auth/signin"
     });
   }
   return (
