@@ -1,3 +1,4 @@
+import { ModeToggle } from '@/components/common/ModeToggle';
 import React from 'react';
 
 const AuthLayout = ({
@@ -6,7 +7,10 @@ const AuthLayout = ({
   children: React.ReactNode,
 }) => {
   return (
-    <div className='h-full flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800'>
+    <div className='h-full flex items-center justify-center'>
+      <div className='absolute top-2 right-4'>
+        <ModeToggle />
+      </div>
       {children}
     </div>
   )
