@@ -124,7 +124,7 @@ function FormComponent({
         {required && "*"}
       </Label>
       <Popover>
-        <PopoverTrigger>
+        <PopoverTrigger asChild>
           <Button
             variant={"outline"}
             className={cn(
