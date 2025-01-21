@@ -171,3 +171,17 @@ export const submitFormByUrl = async (formUrl: string, content: string) => {
     }
   });
 };
+
+export const getFormWithSubmision = async (id: number) => {
+  const user = await currentUser();
+  if(!user) {
+    throw new UserNotFoundErr();
+  }
+
+  return await db.form.findUnique({
+    where: { id, userId: user.id },
+    include: {
+      FormSubmissions: true,
+    }
+  })
+}

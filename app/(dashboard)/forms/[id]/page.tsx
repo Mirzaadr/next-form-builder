@@ -1,8 +1,11 @@
-import { getFormById } from "@/lib/actions/form";
+import { getFormById, getFormWithSubmision } from "@/lib/actions/form";
 import VisitBtn from "./_components/VisitBtn";
 import FormLinkShare from "./_components/FormLinkShare";
 import StatsCard from "@/app/(dashboard)/_components/StatsCard";
 import { BookText, MousePointerClick, MousePointerSquareDashed, View } from "lucide-react";
+import { ElementsType, FormElementInstance } from "../../builder/[id]/_components/FormElements";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { formatDistance } from "date-fns";
 
 interface FormDetailPageProps {
   params: Promise<{ id: string | number }>
@@ -40,41 +43,41 @@ const FormDetailPage = async ({ params }: FormDetailPageProps) => {
         </div>
       </div>
       <div className="w-full pt-8 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 container">
-      <StatsCard 
-        title="Total Visits"
-        icon={<View className="text-blue-600"/>}
-        value={visits.toLocaleString() || "0"}
-        helperText="All time form visits"
-        loading={false}
-        className="shadow-md shadow-blue-600"
-      />
-      <StatsCard 
-        title="Total Submissions"
-        icon={<BookText className="text-yellow-600"/>}
-        value={submissions.toLocaleString() || "0"}
-        helperText="All time submissions"
-        loading={false}
-        className="shadow-md shadow-yellow-600"
-      />
-      <StatsCard 
-        title="Submissions Rate"
-        icon={<MousePointerClick className="text-green-600"/>}
-        value={submissionRate.toLocaleString() + "%"}
-        helperText="Visits that results in form submissions"
-        loading={false}
-        className="shadow-md shadow-green-600"
-      />
-      <StatsCard
-        title="Bounce Rate"
-        icon={<MousePointerSquareDashed className="text-red-600"/>}
-        value={bounceRate.toLocaleString() + "%"}
-        helperText="Visits that leaves without interacting"
-        loading={false}
-        className="shadow-md shadow-red-600"
-      />
+        <StatsCard 
+          title="Total Visits"
+          icon={<View className="text-blue-600"/>}
+          value={visits.toLocaleString() || "0"}
+          helperText="All time form visits"
+          loading={false}
+          className="shadow-md shadow-blue-600"
+        />
+        <StatsCard 
+          title="Total Submissions"
+          icon={<BookText className="text-yellow-600"/>}
+          value={submissions.toLocaleString() || "0"}
+          helperText="All time submissions"
+          loading={false}
+          className="shadow-md shadow-yellow-600"
+        />
+        <StatsCard 
+          title="Submissions Rate"
+          icon={<MousePointerClick className="text-green-600"/>}
+          value={submissionRate.toLocaleString() + "%"}
+          helperText="Visits that results in form submissions"
+          loading={false}
+          className="shadow-md shadow-green-600"
+        />
+        <StatsCard
+          title="Bounce Rate"
+          icon={<MousePointerSquareDashed className="text-red-600"/>}
+          value={bounceRate.toLocaleString() + "%"}
+          helperText="Visits that leaves without interacting"
+          loading={false}
+          className="shadow-md shadow-red-600"
+        />
       </div>
 
-      <div className="container pt-10">
+      <div className="container pt-10 pb-10">
         <SubmissionTable id={form.id} />
       </div>
     </>
@@ -83,10 +86,88 @@ const FormDetailPage = async ({ params }: FormDetailPageProps) => {
 
 export default FormDetailPage;
 
-function SubmissionTable({ id }: {id: number}) {
+type Row = {[key: string]: string} & { submittedAt: Date };
+
+async function SubmissionTable({ id }: {id: number}) {
+  const form = await getFormWithSubmision(id);
+
+  if (!form) {
+    throw new Error("Form not found");
+  }
+
+  const formElements = JSON.parse(form.content) as FormElementInstance[];
+  const columns: {
+    id: string;
+    label: string;
+    required: boolean;
+    type: ElementsType;
+  }[] = [];
+
+  formElements.forEach((element) => {
+    switch(element.type) {
+      case "TextField":
+        columns.push({
+          id: element.id,
+          label: element.extraAttributes?.label,
+          required: element.extraAttributes?.required,
+          type: element.type,
+        });
+        break;
+      default:
+        break;
+    }
+  });
+
+  const rows: Row[] = []
+  form.FormSubmissions.map((submission) => {
+    const content = JSON.parse(submission.content);
+    rows.push({
+      ...content,
+      submittedAt: submission.createdAt,
+    });
+  })
+
   return (
     <>
       <h1 className="text-2xl font-bold my-4">Submissions</h1>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.id} className="uppercase">
+                  {column.label}
+                </TableHead>
+              ))}
+              <TableHead className="text-muted-foreground text-right uppercase">
+                Submitted at
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {
+              rows.map((row, index) => (
+                <TableRow key={index}>
+                  {
+                    columns.map((column) => (
+                      <RowCell key={column.id} type={column.type} value={row[column.id]}/>
+                    ))
+                  }
+                  <TableCell className="text-muted-foreground text-right">
+                    {formatDistance(row.submittedAt, new Date())}
+                  </TableCell>
+                </TableRow>
+              ))
+            }
+          </TableBody>
+        </Table>
+      </div>
     </>
   )
+}
+
+const RowCell = ({ type, value }: { type: ElementsType; value: string; }) => {
+  const node: React.ReactNode = value;
+
+  return <TableCell>{node}</TableCell>
 }
