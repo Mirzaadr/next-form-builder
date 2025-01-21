@@ -152,6 +152,13 @@ async function SubmissionTable({ id }: {id: number}) {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {rows.length < 1 && (
+              <TableRow>
+                <TableCell colSpan={(columns.length || 0) + 1} className="align-middle text-center">
+                  <span>No submissions</span>
+                </TableCell>
+              </TableRow>
+            )}
             {
               rows.map((row, index) => (
                 <TableRow key={index}>
