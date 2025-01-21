@@ -12,6 +12,7 @@ const FormElementSidebar = () => {
         <SidebarBtnElement formElement={FormElements.TitleField} />
         <SidebarBtnElement formElement={FormElements.SubtitleField} />
         <SidebarBtnElement formElement={FormElements.ParagraphField} />
+        <SidebarBtnElement formElement={FormElements.Separator} />
         <p className="text-sm text-muted-foreground col-span-1 md:col-span-2 my-2 place-self-start">Form elements</p>
         <SidebarBtnElement formElement={FormElements.TextField} />
       </div>
