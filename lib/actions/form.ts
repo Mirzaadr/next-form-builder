@@ -116,7 +116,7 @@ export const updateFormContent = async (id: number, jsonContent: string) => {
   }
 
   return await db.form.update({
-    where: { id },
+    where: { id, userId: user.id },
     data: {
       content: jsonContent,
     }
@@ -130,7 +130,7 @@ export const publishForm = async (id: number) => {
   }
 
   return await db.form.update({
-    where: { id },
+    where: { id, userId: user.id },
     data: {
       published: true,
     }
