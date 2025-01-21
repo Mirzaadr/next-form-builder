@@ -2,8 +2,9 @@ import { LucideIcon } from "lucide-react";
 import { TextFieldFormElement } from "./fields/TextField";
 import { TitleFieldFormElement } from "./fields/TitleField";
 import { SubtitleFieldFormElement } from "./fields/SubtitleField";
+import { ParagraphFieldFormElement } from "./fields/ParagraphField";
 
-export type ElementsType = "TextField" | "TitleField" | "SubtitleField";
+export type ElementsType = "TextField" | "TitleField" | "SubtitleField" | "ParagraphField";
 
 export type SubmitFunction = (key:string, value:string) => void;
 
@@ -45,4 +46,5 @@ export const FormElements: FormElementsType = {
   TextField: TextFieldFormElement,
   TitleField: TitleFieldFormElement,
   SubtitleField: SubtitleFieldFormElement,
+  ParagraphField: ParagraphFieldFormElement,
 };
