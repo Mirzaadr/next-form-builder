@@ -8,13 +8,18 @@ import SignoutButton from './SignoutButton';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import AuthButton from '@/components/auth/AuthButton';
 import { Button } from '@/components/ui/button';
+import Spinner from '@/components/common/Spinner';
 
 type Props = {
   label?: string;
 };
 
 const UserButton = (props: Props) => {
-  const { user, isAuthenticated } = useCurrentUser();
+  const { user, isAuthenticated, isLoading } = useCurrentUser();
+
+  if (isLoading) {
+    return <Spinner size={"icon"}/>
+  }
 
   if (!isAuthenticated) {
     return (

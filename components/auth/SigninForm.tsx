@@ -16,7 +16,7 @@ import * as z from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { login } from '@/lib/actions/signin';
-import { redirect, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { DEFAULT_LOGIN_REDIRECT } from '@/lib/settings';
@@ -49,7 +49,7 @@ const LoginForm = (props: LoginFormProps) => {
           toast.error(res.message);
         } else {
           toast.success(res.message);
-          redirect(DEFAULT_LOGIN_REDIRECT);
+          // redirect(DEFAULT_LOGIN_REDIRECT);
         }
       });
     });
