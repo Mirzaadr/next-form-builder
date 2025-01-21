@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading1, SeparatorHorizontal } from "lucide-react";
+import { Minus } from "lucide-react";
 import {
   ElementsType,
   FormElement,
@@ -23,8 +23,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 const type: ElementsType = "Separator";
@@ -36,7 +34,7 @@ export const SeparatorFormElement: FormElement = {
     type,
   }),
   designerBtnElement: {
-    icon: SeparatorHorizontal,
+    icon: Minus,
     label: "Separator",
   },
   designerComponent: DesignerComponent,
